@@ -2079,14 +2079,23 @@ export function createGridController<TData>(
         return
       }
 
+      const nextViewport = {
+        start: viewport.offset,
+        end: viewport.offset + viewport.limit,
+      }
+
+      if (
+        state.virtualization.viewport.start === nextViewport.start &&
+        state.virtualization.viewport.end === nextViewport.end
+      ) {
+        return
+      }
+
       setState((current) => ({
         ...current,
         virtualization: {
           ...current.virtualization,
-          viewport: {
-            start: viewport.offset,
-            end: viewport.offset + viewport.limit,
-          },
+          viewport: nextViewport,
           requestedRange: current.virtualization.requestedRange,
         },
       }))

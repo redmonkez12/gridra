@@ -253,6 +253,46 @@ describe('@gridra/core controller', () => {
     vi.useRealTimers()
   })
 
+  it('does not notify listeners when the viewport is unchanged', async () => {
+    const dataSource: GridDataSource<{ id: string }> = {
+      async load(query) {
+        return {
+          rows:
+            query.slice.kind === 'offset'
+              ? Array.from({ length: query.slice.limit }, (_, index) => ({
+                  id: `row-${query.slice.offset + index}`,
+                }))
+              : [],
+          pageInfo: { kind: 'offset', totalRowCount: 100, hasNextPage: true },
+        }
+      },
+    }
+
+    const controller = createGridController({
+      dataSource,
+      getRowId: (row) => row.id,
+      initialQuery: createDefaultQuery(10),
+      virtualization: {
+        enabled: true,
+        rowHeight: 30,
+        overscan: 0,
+        viewportDebounceMs: 0,
+      },
+    })
+
+    await flushPromises()
+
+    const listener = vi.fn()
+    const unsubscribe = controller.subscribe(listener)
+
+    controller.setViewport({ start: 0, end: 10 })
+
+    expect(listener).not.toHaveBeenCalled()
+
+    unsubscribe()
+    controller.destroy()
+  })
+
   it('creates query-scoped selection without loading every row', async () => {
     const dataSource: GridDataSource<{ id: string }> = {
       async load(query) {

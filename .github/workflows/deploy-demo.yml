@@ -1,0 +1,49 @@
+name: Deploy Demo
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deploy-demo
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      VITE_BASE_PATH: /${{ github.event.repository.name }}/
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - uses: actions/configure-pages@v5
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter @gridra/demo build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: examples/demo/dist
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

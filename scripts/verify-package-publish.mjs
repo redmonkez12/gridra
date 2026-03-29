@@ -10,12 +10,16 @@ const packageChecks = {
     allowedExports: ['.'],
     allowedDependencies: [],
     allowedPeerDependencies: [],
+    repositoryUrl: 'https://github.com/redmonkez12/gridra.git',
+    repositoryDirectory: 'packages/core',
   },
   '@gridra/react': {
     dir: 'packages/react',
     allowedExports: ['.'],
     allowedDependencies: ['@gridra/core'],
     allowedPeerDependencies: ['react'],
+    repositoryUrl: 'https://github.com/redmonkez12/gridra.git',
+    repositoryDirectory: 'packages/react',
   },
 }
 
@@ -38,6 +42,8 @@ for (const [workspace, rules] of Object.entries(packageChecks)) {
     packageJson.peerDependencies ?? {},
   ).sort()
   const packageErrors = []
+  const repositoryUrl = packageJson.repository?.url
+  const repositoryDirectory = packageJson.repository?.directory
 
   if (
     JSON.stringify(exportKeys) !==
@@ -63,6 +69,18 @@ for (const [workspace, rules] of Object.entries(packageChecks)) {
   ) {
     packageErrors.push(
       `peer dependencies must stay limited to ${rules.allowedPeerDependencies.join(', ') || '(none)'}, found ${peerDependencyKeys.join(', ') || '(none)'}`,
+    )
+  }
+
+  if (repositoryUrl !== rules.repositoryUrl) {
+    packageErrors.push(
+      `repository.url must be ${rules.repositoryUrl}, found ${repositoryUrl ?? '(none)'}`,
+    )
+  }
+
+  if (repositoryDirectory !== rules.repositoryDirectory) {
+    packageErrors.push(
+      `repository.directory must be ${rules.repositoryDirectory}, found ${repositoryDirectory ?? '(none)'}`,
     )
   }
 

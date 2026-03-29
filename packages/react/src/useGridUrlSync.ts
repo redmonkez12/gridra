@@ -1,7 +1,19 @@
-import { parseGridUrlState, serializeGridUrlState } from '@gridra/core'
+import {
+  areQueriesEqual,
+  normalizeColumnsState,
+  parseGridUrlState,
+  serializeGridUrlState,
+} from '@gridra/core'
 import { useEffect } from 'react'
 import { useGridColumns, useGridQuery } from './useDataGrid'
 import type { DataGridInstance, UseGridUrlSyncOptions } from './types'
+
+function areColumnsStateEqual(
+  previous: ReturnType<typeof normalizeColumnsState>,
+  next: ReturnType<typeof normalizeColumnsState>,
+): boolean {
+  return JSON.stringify(previous) === JSON.stringify(next)
+}
 
 export function useGridUrlSync<TData>(
   grid: DataGridInstance<TData>,
@@ -19,19 +31,27 @@ export function useGridUrlSync<TData>(
     }
 
     const applyUrlState = () => {
+      const currentQuery = grid.getQuery()
+      const currentColumns = grid.getColumnsState()
       const nextState = parseGridUrlState(window.location.search, {
-        query: grid.getQuery(),
-        columns: grid.getColumnsState(),
+        query: currentQuery,
+        columns: currentColumns,
       })
 
-      if (syncQuery) {
+      if (syncQuery && !areQueriesEqual(currentQuery, nextState.query)) {
         grid.setQuery(nextState.query, {
           reason: 'url-sync',
           source: 'url',
         })
       }
 
-      if (syncColumns) {
+      if (
+        syncColumns &&
+        !areColumnsStateEqual(
+          normalizeColumnsState(currentColumns),
+          normalizeColumnsState(nextState.columns),
+        )
+      ) {
         grid.setColumnsState(nextState.columns, {
           source: 'url',
         })
