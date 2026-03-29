@@ -1,0 +1,35 @@
+{
+  "name": "@gridra/core",
+  "description": "Framework-agnostic primitives for server-first data grid state, queries, and caching.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup --config tsup.config.ts && tsc -b tsconfig.json --force",
+    "prepublishOnly": "npm --prefix ../.. run release:verify"
+  },
+  "keywords": [
+    "gridra",
+    "headless",
+    "server-driven",
+    "typescript"
+  ]
+}

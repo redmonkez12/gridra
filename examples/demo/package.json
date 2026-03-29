@@ -1,0 +1,17 @@
+{
+  "name": "@gridra/demo",
+  "private": true,
+  "description": "Example app showcasing the public @gridra/core and @gridra/react packages.",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@gridra/table-reference": "0.1.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  }
+}

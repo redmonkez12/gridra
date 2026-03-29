@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "noEmit": true,
+    "paths": {
+      "@gridra/core": ["../../packages/core/src/index.ts"],
+      "@gridra/react": ["../../packages/react/src/index.ts"],
+      "@gridra/table-reference": [
+        "../../packages/table-reference/src/index.tsx"
+      ]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}

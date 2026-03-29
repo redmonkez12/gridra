@@ -1,0 +1,41 @@
+{
+  "name": "@gridra/react",
+  "description": "React hooks and types for building server-first data grids on top of @gridra/core.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup --config tsup.config.ts && tsc -b tsconfig.json --force",
+    "prepublishOnly": "npm --prefix ../.. run release:verify"
+  },
+  "dependencies": {
+    "@gridra/core": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": "^19.1.1"
+  },
+  "keywords": [
+    "gridra",
+    "react",
+    "headless",
+    "typescript"
+  ]
+}
